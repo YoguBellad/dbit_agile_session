@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Simulation of Scrum and Agile Dynamics</title>
+  <style>
+    /* CSS Variables: Pure Jet-Black Dark Theme (No blue tints) & Clean Executive Light Theme */
+    :root[data-theme="dark"] {
+      --bg: #000000;
+      --bg-gradient: #000000;
+      --card-bg: #0f0f11;
+      --card-border: #262629;
+      --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+      --header-bg: rgba(0, 0, 0, 0.95);
+      --text-main: #ffffff;
+      --text-sub: #e4e4e7;
+      --text-muted: #a1a1aa;
+      --primary: #f59e0b;           /* Warm Amber Gold - High contrast on pure black */
+      --primary-border: #d97706;
+      --primary-bg-subtle: rgba(245, 158, 11, 0.12);
+      --accent-gold: #fbbf24;
+      --accent-red: #ef4444;
+      --accent-green: #10b981;
+      --badge-bg: #1c1917;
+      --badge-text: #fef3c7;
+      --voting-box-bg: #09090b;
+      --kanban-col-bg: #0a0a0c;
+      --ticket-bg: #141417;
+    }
+
+    :root[data-theme="light"] {
+      --bg: #f4f4f5;
+      --bg-gradient: #f4f4f5;
+      --card-bg: #ffffff;
+      --card-border: #e4e4e7;
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+      --header-bg: rgba(255, 255, 255, 0.96);
+      --text-main: #09090b;
+      --text-sub: #27272a;
+      --text-muted: #71717a;
+      --primary: #d97706;
+      --primary-border: #b45309;
+      --primary-bg-subtle: rgba(217, 119, 6, 0.08);
+      --accent-gold: #d97706;
+      --accent-red: #dc2626;
+      --accent-green: #059669;
+      --badge-bg: #fef3c7;
+      --badge-text: #92400e;
+      --voting-box-bg: #ffffff;
+      --kanban-col-bg: #e4e4e7;
+      --ticket-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    /* Top Presentation Bar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 36px;
+      background: var(--header-bg);
+      border-bottom: 2px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-icon {
+      color: var(--primary);
+    }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .timer-badge {
+      background: var(--badge-bg);
+      border: 1.5px solid var(--primary-border);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 1.1rem;
+      font-family: monospace;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    button {
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 1.5px solid var(--card-border);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    button.primary-btn {
+      background: var(--primary);
+      border-color: var(--primary-border);
+      color: #000000;
+      font-weight: 800;
+    }
+
+    :root[data-theme="light"] button.primary-btn {
+      color: #ffffff;
+    }
+
+    button.primary-btn:hover {
+      opacity: 0.95;
+    }
+
+    /* Full Viewport Container */
+    #slide-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 40px;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 28px 48px;
+      display: none;
+      flex-direction: column;
+      justify-content: flex-start;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* High-Impact Projector Typography */
+    .module-tag {
+      font-size: 1.3rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    p.lead-text {
+      font-size: 1.65rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 24px;
+      max-width: 1550px;
+    }
+
+    /* Grids & Cards: Spans entire width with rich, large typography */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 14px;
+      padding: 30px 32px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card h3 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-main);
+    }
+
+    .card p, .card ul, .card ol {
+      color: var(--text-sub);
+      font-size: 1.55rem;
+      line-height: 1.55;
+    }
+
+    .card ul, .card ol {
+      padding-left: 32px;
+      margin-top: 10px;
+    }
+
+    .card li {
+      margin-bottom: 12px;
+    }
+
+    .card-footer-tag {
+      margin-top: auto;
+      padding-top: 20px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      border-top: 1.5px solid var(--card-border);
+    }
+
+    /* Jira Issue Type Taxonomy Table (Slide 3) */
+    .jira-taxonomy-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1.4rem;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .jira-taxonomy-table th {
+      background: var(--kanban-col-bg);
+      color: var(--primary);
+      padding: 16px 20px;
+      font-weight: 800;
+      border-bottom: 2px solid var(--card-border);
+      text-align: left;
+    }
+
+    .jira-taxonomy-table td {
+      padding: 16px 20px;
+      border-bottom: 1.5px solid var(--card-border);
+      color: var(--text-sub);
+      line-height: 1.45;
+    }
+
+    .issue-tag {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 1.15rem;
+      padding: 4px 12px;
+      border-radius: 6px;
+      color: #ffffff;
+    }
+
+    .tag-epic { background: #9333ea; }
+    .tag-feature { background: #0284c7; }
+    .tag-story { background: #16a34a; }
+    .tag-task { background: #0284c7; }
+    .tag-bug { background: #dc2626; }
+
+    /* Voting Containers & Buttons (NO answers displayed in button text) */
+    .voting-container {
+      background: var(--voting-box-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 14px;
+      padding: 24px 30px;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .scenario-box {
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--text-main);
+      padding: 18px 24px;
+      background: var(--card-bg);
+      border-left: 6px solid var(--primary);
+      border-radius: 8px;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .voting-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .vote-btn {
+      padding: 16px 20px;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 1.4rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .vote-btn:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .vote-btn.selected-correct {
+      background: rgba(16, 185, 129, 0.2) !important;
+      border-color: var(--accent-green) !important;
+      color: var(--accent-green) !important;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
+    }
+
+    .vote-btn.selected-wrong {
+      background: rgba(239, 68, 68, 0.2) !important;
+      border-color: var(--accent-red) !important;
+      color: var(--accent-red) !important;
+    }
+
+    .vote-explanation {
+      margin-top: 16px;
+      padding: 16px 22px;
+      background: var(--primary-bg-subtle);
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 1.4rem;
+      line-height: 1.5;
+      display: none;
+    }
+
+    /* Live Jira Kanban Board Visualizer */
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      flex: 1;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .kanban-col {
+      background: var(--kanban-col-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .kanban-col-header {
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--card-border);
+      padding-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ticket {
+      background: var(--ticket-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .ticket-id {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .ticket-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+
+    .ticket-badge {
+      display: inline-block;
+      font-size: 1.05rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+
+    .badge-points {
+      background: var(--badge-bg);
+      color: var(--primary);
+      border: 1.5px solid var(--primary-border);
+    }
+
+    .badge-flag {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--accent-red);
+      border: 1.5px solid var(--accent-red);
+    }
+
+    /* Speaker Notes Panel (Bottom Float) */
+    #notes-panel {
+      position: fixed;
+      bottom: 65px;
+      right: 36px;
+      width: 620px;
+      max-height: 350px;
+      background: var(--card-bg);
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      padding: 24px;
+      color: var(--text-main);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+      display: none;
+      z-index: 200;
+      overflow-y: auto;
+    }
+
+    #notes-panel h4 {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #notes-content {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      color: var(--text-sub);
+    }
+
+    /* Footer: Clean, professional, NO institutional branding */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 36px;
+      background: var(--header-bg);
+      border-top: 2px solid var(--card-border);
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .progress-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 5px;
+      background: var(--primary);
+      transition: width 0.25s ease;
+      z-index: 300;
+    }
+
+    .sprint-timer-widget {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      padding: 14px 24px;
+      border-radius: 10px;
+    }
+
+    .sprint-timer-display {
+      font-family: monospace;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Navigation -->
+  <header>
+    <div class="brand">
+      <span class="brand-icon">⚡</span>
+      <span>Interactive Simulation of Scrum and Agile Dynamics</span>
+    </div>
+    <div class="header-center">
+      <span class="timer-badge" id="clock-display">00:00:00</span>
+    </div>
+    <div class="header-controls">
+      <button onclick="toggleTheme()" id="theme-btn" title="Toggle Light/Dark Theme">🌓 Theme</button>
+      <button onclick="prevSlide()">◀ Prev (←)</button>
+      <span id="slide-counter" style="font-size: 1.2rem; font-weight: 800; color: var(--primary); min-width: 70px; text-align: center;">1 / 19</span>
+      <button onclick="nextSlide()" class="primary-btn">Next (→) ▶</button>
+      <button onclick="toggleNotes()">🎙️ Notes (S)</button>
+    </div>
+  </header>
+
+  <!-- Slide Viewport -->
+  <div id="slide-viewport">
+
+    <!-- Slide 1: Title -->
+    <div class="slide active" data-notes="Welcome everyone! In academic courses, Agile and Scrum can feel like abstract definitions. Today, we aren't writing code. We are stepping onto the floor of DB Cafe during a chaotic Friday lunch rush. By the end of these two hours, your team will have lived the sprint cycle.">
+      <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+        <span class="module-tag" style="margin-bottom: 16px;">HANDS-ON ENGINEERING SIMULATION</span>
+        <h1 style="font-size: 4rem; margin-bottom: 20px;">Interactive Simulation of Scrum and Agile Dynamics</h1>
+        <p class="lead-text" style="font-size: 1.9rem; margin: 0 auto 40px auto; max-width: 1400px;">
+          Mastering Sprints, Backlog Prioritization, Review Gates, and Team Flow under High-Pressure Constraints.
+        </p>
+        <div class="grid-3" style="max-width: 1400px; margin: 0 auto; width: 100%;">
+          <div class="card" style="text-align: left; padding: 28px;">
+            <div style="font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Structure</div>
+            <div style="font-weight: 900; font-size: 1.85rem; color: var(--primary); margin-top: 8px;">2 Simulated Sprints</div>
+            <p style="font-size: 1.35rem; margin-top: 8px;">Sprint 1: Live Demo<br>Sprint 2: 10 Teams Trial</p>
+          </div>
+          <div class="card" style="text-align: left; padding: 28px;">
+            <div style="font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Participants</div>
+            <div style="font-weight: 900; font-size: 1.85rem; color: var(--accent-gold); margin-top: 8px;">10 Teams of 6</div>
+            <p style="font-size: 1.35rem; margin-top: 8px;">PO Gatekeeper, Scrum Master & Operations Developers</p>
+          </div>
+          <div class="card" style="text-align: left; padding: 28px;">
+            <div style="font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Jira Workflow</div>
+            <div style="font-weight: 900; font-size: 1.85rem; color: var(--accent-green); margin-top: 8px;">4 Live Columns</div>
+            <p style="font-size: 1.35rem; margin-top: 8px;">To Do → In Progress → Review → Done</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: The Hook (Module 1 - Big Text filling the blocks) -->
+    <div class="slide" data-notes="Set the scene with high urgency! Friday 1:15 PM lunch rush. 60 orders queued, phone ringing, kitchen chaos. In engineering, this is a live production outage. You cannot fix 50 problems simultaneously without breaking everything.">
+      <span class="module-tag">Module 1: Production Chaos</span>
+      <h1>Welcome to DB Cafe: Friday 1:15 PM Rush Hour</h1>
+      <p class="lead-text">Classes just dismissed. 60 students are crowding the counter, delivery couriers are honking outside, and the kitchen is on fire:</p>
+      <div class="grid-3">
+        <div class="card" style="border-top: 6px solid var(--accent-red); padding: 36px 32px;">
+          <h3 style="color: var(--accent-red); font-size: 2.1rem;">💥 Customer Escalation</h3>
+          <p style="font-size: 1.65rem; line-height: 1.6;">A customer is screaming at the counter because they ordered Veg Fried Rice and received chicken noodles with zero chili sauce.</p>
+          <div class="card-footer-tag" style="color: var(--accent-red);">
+            Impact: Broken Acceptance Criteria & Failed DoD
+          </div>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--accent-gold); padding: 36px 32px;">
+          <h3 style="color: var(--accent-gold); font-size: 2.1rem;">⚠️ Kitchen Deadlock</h3>
+          <p style="font-size: 1.65rem; line-height: 1.6;">Chef 1 and Chef 2 accidentally cooked the exact same order twice because loose paper slips got scrambled on the counter rail.</p>
+          <div class="card-footer-tag" style="color: var(--accent-gold);">
+            Impact: Zero Work-In-Progress (WIP) Visibility
+          </div>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--primary); padding: 36px 32px;">
+          <h3 style="color: var(--primary); font-size: 2.1rem;">🛑 Infrastructure Outage</h3>
+          <p style="font-size: 1.65rem; line-height: 1.6;">The billing receipt printer dropped Wi-Fi mid-payment. Orders are paid for, but the chef has zero record of what to cook!</p>
+          <div class="card-footer-tag" style="color: var(--primary);">
+            Impact: Critical Live System Incident / Bug
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Module 2 Jira Issue Taxonomy -->
+    <div class="slide" data-notes="Walk through standard Jira issue types. Explain: Epic is multi-quarter/month (we won't use it today). Feature sits between Epic and Story (1-2 sprints, like planning the Biryani Festival!). Story is user-facing in 1 sprint. Task is technical/operational support. Bug is a broken defect. Note: 'Blocker' is an Impediment Flag, not an issue type!">
+      <span class="module-tag">Module 2: Jira Issue Taxonomy</span>
+      <h1>How Jira Classifies Work: Issue Types & Scope</h1>
+      <p class="lead-text">Before logging work in Jira, you must match the incident to its true issue hierarchy and scope:</p>
+      
+      <table class="jira-taxonomy-table">
+        <thead>
+          <tr>
+            <th style="width: 14%;">Issue Type</th>
+            <th style="width: 38%;">Definition & Purpose</th>
+            <th style="width: 18%;">Duration / Scope</th>
+            <th style="width: 30%;">Real-World & Cafe Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="issue-tag tag-epic">Epic</span></td>
+            <td>A large, goal-driven body of work grouping related stories, tasks, or features.</td>
+            <td>Multi-sprint / Quarters</td>
+            <td><em>Full Digital Cafe Overhaul</em> (Online Ordering + KDS + Loyalty)</td>
+          </tr>
+          <tr>
+            <td><span class="issue-tag tag-feature">Feature</span></td>
+            <td>A distinct product capability between an Epic and a Story.</td>
+            <td>1 to 2 Sprints</td>
+            <td><strong>Plan 3-Day Grand Biryani Festival</strong> (Cauldrons, banners, rice suppliers)</td>
+          </tr>
+          <tr>
+            <td><span class="issue-tag tag-story">Story</span></td>
+            <td>Small, user-facing requirement: <em>"As a [user], I want [goal], so that [benefit]."</em></td>
+            <td>Single Sprint</td>
+            <td><em>"As a student, I want to see out-of-stock items grayed out on app."</em></td>
+          </tr>
+          <tr>
+            <td><span class="issue-tag tag-task">Task</span></td>
+            <td>Technical, operational, or background activity supporting delivery.</td>
+            <td>Hours to 1–2 Days</td>
+            <td><em>Provision & configure backup 5G mobile hotspot for tablet</em></td>
+          </tr>
+          <tr>
+            <td><span class="issue-tag tag-bug">Bug</span></td>
+            <td>A defect or error impairing or breaking normal expected functionality.</td>
+            <td>Fixed as prioritized</td>
+            <td><em>Billing printer cuts off slips when power strip is bumped</em></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 14px; font-size: 1.25rem; color: var(--accent-gold); font-weight: 700;">
+        💡 Pro-Tip: In Jira, a "Blocker" is NOT an issue type—it is an <strong>Impediment Flag</strong> you add to any active Story, Task, or Bug!
+      </div>
+    </div>
+
+    <!-- Slide 4: Interactive Room Voting (Scenarios A & B) -->
+    <div class="slide" data-notes="Read Scenario A. Ask for show of hands for A, B, C. Click to reveal. Explain why it's a Story (User Story). Then repeat for Scenario B (Bug).">
+      <span class="module-tag">Module 2: Interactive Room Voting</span>
+      <h1>Cast Your Vote: Identify the Jira Issue Type</h1>
+      <p class="lead-text">Examine each incident from the DB Cafe floor. Vote on the correct Jira issue type:</p>
+      
+      <!-- Scenario A -->
+      <div class="voting-container">
+        <div class="scenario-box">
+          <strong>Scenario A:</strong> The ordering app lets students place orders for Paneer Rolls, but the kitchen is out of paneer. We need the app to automatically gray out sold-out items in real time.
+        </div>
+        <div class="voting-options">
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp1')">A) Bug</button>
+          <button class="vote-btn" onclick="revealVote(this, true, 'exp1')">B) Story (User Story)</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp1')">C) Task</button>
+        </div>
+        <div id="exp1" class="vote-explanation">
+          💡 <strong>Facilitator Explains:</strong> The app didn't crash—it executed its existing code! It requires a user-facing requirement: <em>"As a customer/cashier, I want out-of-stock items grayed out..."</em>. That is a <strong>Story (User Story)</strong>!
+        </div>
+      </div>
+
+      <!-- Scenario B -->
+      <div class="voting-container">
+        <div class="scenario-box">
+          <strong>Scenario B:</strong> When the counter power cord is bumped, the receipt printer cuts off, and the student's paid order slip is permanently lost from memory.
+        </div>
+        <div class="voting-options">
+          <button class="vote-btn" onclick="revealVote(this, true, 'exp2')">A) Bug</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp2')">B) Task</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp2')">C) Story (User Story)</button>
+        </div>
+        <div id="exp2" class="vote-explanation">
+          💡 <strong>Facilitator Explains:</strong> Payment succeeded, but the expected confirmation slip was destroyed. Expected functionality is actively failing. That is a critical <strong>Bug</strong>!
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Interactive Room Voting (Scenarios C & D) -->
+    <div class="slide" data-notes="Read Scenario C (Task - operational work). Click to reveal. Read Scenario D (Feature - Biryani festival, spans 1-2 sprints, too big for 1 story). Click to reveal.">
+      <span class="module-tag">Module 2: Interactive Room Voting</span>
+      <h1>Cast Your Vote: Tasks vs. Multi-Sprint Features</h1>
+      <p class="lead-text">Two more operational scenarios from DB Cafe. Vote on how Jira categorizes them:</p>
+      
+      <!-- Scenario C -->
+      <div class="voting-container">
+        <div class="scenario-box">
+          <strong>Scenario C:</strong> Configuring the manager's 5G mobile hotspot, setting up local Wi-Fi passwords, and testing printer IP connectivity before rush hour starts.
+        </div>
+        <div class="voting-options">
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp3')">A) Story (User Story)</button>
+          <button class="vote-btn" onclick="revealVote(this, true, 'exp3')">B) Task (Operational / Tech)</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp3')">C) Feature</button>
+        </div>
+        <div id="exp3" class="vote-explanation">
+          💡 <strong>Facilitator Explains:</strong> This is technical / operational infrastructure work that supports the kitchen. It has no user persona ("As a user..."), takes a few hours, and enables the team. That is a <strong>Task</strong>!
+        </div>
+      </div>
+
+      <!-- Scenario D -->
+      <div class="voting-container">
+        <div class="scenario-box">
+          <strong>Scenario D:</strong> Organizing the "3-Day Grand Biryani Festival": Sourcing commercial cauldrons, negotiating bulk basmati rice vendors, designing banners, and scheduling extra chef shifts.
+        </div>
+        <div class="voting-options">
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp4')">A) Story (Single Sprint)</button>
+          <button class="vote-btn" onclick="revealVote(this, true, 'exp4')">B) Feature (Multi-Sprint Scope)</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp4')">C) Bug</button>
+        </div>
+        <div id="exp4" class="vote-explanation">
+          💡 <strong>Facilitator Explains:</strong> Way too massive for a single lunch sprint! It spans 1 to 2 sprints and involves multiple sub-deliverables. This is a <strong>Feature</strong> (or mini-Epic). If pulled into a 15-minute sprint, it causes catastrophic scope creep!
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Sizing & PointingPoker -->
+    <div class="slide" data-notes="Introduce Story Points and Fibonacci sequence. Sizing is complexity, risk, and effort—not hours! Have teams navigate to www.pointingpoker.com on their laptop to prepare for Sprint 2 estimation.">
+      <span class="module-tag">Module 3: Sizing the Work</span>
+      <h1>Story Points & PointingPoker.com</h1>
+      <p class="lead-text">Why don't software teams estimate in hours? Because three developers will give three different estimates. Agile uses <strong>Story Points</strong> to measure relative complexity, risk, and uncertainty:</p>
+      
+      <div class="grid-2">
+        <div class="card" style="padding: 34px;">
+          <h3 style="color: var(--primary); font-size: 2rem;">🔢 The Fibonacci Sizing Scale</h3>
+          <ul style="font-size: 1.6rem; line-height: 1.8;">
+            <li><strong style="color: var(--primary);">1 Point:</strong> Trivial, zero risk (e.g., taping a bag, inserting sauce packet).</li>
+            <li><strong style="color: var(--primary);">2–3 Points:</strong> Standard, well-understood task (e.g., cooking standard fried rice).</li>
+            <li><strong style="color: var(--accent-gold);">5 Points:</strong> Complex task with multiple dependencies (e.g., custom combo meal).</li>
+            <li><strong style="color: var(--accent-red);">8 Points:</strong> High uncertainty / Mini-project (e.g., planning a multi-day festival).</li>
+          </ul>
+        </div>
+        <div class="card" style="text-align: center; justify-content: center; align-items: center; padding: 34px;">
+          <h3 style="color: var(--accent-green); font-size: 2.2rem;">🌐 Live Tool: PointingPoker.com</h3>
+          <p style="font-size: 1.55rem; margin: 18px 0;">Open on your team laptop right now:</p>
+          <div style="font-size: 2.2rem; font-family: monospace; font-weight: 900; background: var(--kanban-col-bg); padding: 18px 36px; border-radius: 10px; border: 2.5px dashed var(--primary); margin-bottom: 24px; color: var(--primary);">
+            www.pointingpoker.com
+          </div>
+          <p style="font-size: 1.35rem; color: var(--text-muted);">Zero login required. Create your free team room in 5 seconds to vote simultaneously!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: The Agile Defense Toolkit -->
+    <div class="slide" data-notes="Equip them with the defense toolkit! Make sure they understand: (1) Capacity budget is 10 points. (2) Saying 'No' to scope creep is professional engineering. (3) Out-of-stock items must be rejected.">
+      <span class="module-tag">Module 3: Strategic Protection</span>
+      <h1>The Agile Defense Toolkit</h1>
+      <p class="lead-text">Equip your team with three defensive weapons before stepping onto the kitchen floor in Sprint 2:</p>
+      
+      <div class="grid-3">
+        <div class="card" style="border-top: 6px solid var(--accent-green); padding: 34px;">
+          <h3 style="color: var(--accent-green); font-size: 2rem;">🛡️ 1. The Capacity Shield</h3>
+          <p style="font-size: 1.6rem; line-height: 1.6;"><strong>Strict 10-Point Ceiling:</strong> Your team's capacity for Sprint 2 is exactly 10 Story Points. You physically cannot pull 20 points of work without guaranteeing delayed orders and burnout.</p>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--primary); padding: 34px;">
+          <h3 style="color: var(--primary); font-size: 2rem;">⚔️ 2. The Art of Saying "No"</h3>
+          <p style="font-size: 1.6rem; line-height: 1.6;"><strong>Scope Creep Defense:</strong> Pushing a low-priority request to the <em>Product Backlog</em> for a future sprint is an engineering victory, not a failure. Protect your sprint focus!</p>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--accent-red); padding: 34px;">
+          <h3 style="color: var(--accent-red); font-size: 2rem;">🔍 3. Feasibility Checks</h3>
+          <p style="font-size: 1.6rem; line-height: 1.6;"><strong>Reject Impossible Tasks:</strong> If a ticket requests ingredients or APIs we do not possess (e.g., avocados in a campus canteen), reject it immediately. Do not commit to fantasy.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: The Board Architecture -->
+    <div class="slide" data-notes="Walk through your live Jira board columns: To Do -> In Progress -> Review -> Done. Emphasize that Review is not a formality; it is where the Product Owner validates Acceptance Criteria.">
+      <span class="module-tag">Module 4: Mission Control</span>
+      <h1>Live Jira Board: 4 Essential Columns</h1>
+      <p class="lead-text">Main screen live on <strong>yogudgz-jiratry1794500986450.atlassian.net</strong>. Every ticket travels through 4 strict columns:</p>
+      
+      <div class="kanban-board">
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span>To Do</span>
+            <span>Backlog</span>
+          </div>
+          <div class="ticket">
+            <div class="ticket-id">DBC-1 (Task)</div>
+            <div class="ticket-title">Wi-Fi Hotspot Failover</div>
+            <span class="ticket-badge badge-points">2 pts</span>
+          </div>
+          <div class="ticket">
+            <div class="ticket-id">DBC-2 (Story)</div>
+            <div class="ticket-title">Veg Fried Rice Order</div>
+            <span class="ticket-badge badge-points">3 pts</span>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span>In Progress</span>
+            <span style="color: var(--accent-gold);">Max 2 WIP</span>
+          </div>
+          <div style="font-size: 1.35rem; color: var(--text-muted); font-style: italic; text-align: center; margin-top: 60px;">Chefs actively cooking / resolving</div>
+        </div>
+        <div class="kanban-col" style="border-color: var(--accent-gold);">
+          <div class="kanban-col-header" style="color: var(--accent-gold);">
+            <span>Review</span>
+            <span>PO Gatekeeper</span>
+          </div>
+          <div style="font-size: 1.35rem; color: var(--text-muted); font-style: italic; text-align: center; margin-top: 60px;">Checked against Acceptance Criteria</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span>Done</span>
+            <span>Verified</span>
+          </div>
+          <div style="font-size: 1.35rem; color: var(--text-muted); font-style: italic; text-align: center; margin-top: 60px;">Ready for pickup & dispatch</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: Sprint 1 Demo - Ticket 1 -->
+    <div class="slide" data-notes="Demonstrate DBC-1 live on Jira. Drag from To Do to In Progress. Write comment with mobile hotspot fix. Move to Review, PO verifies, move to Done.">
+      <span class="module-tag">Module 4: Sprint 1 Live Walkthrough</span>
+      <h1>Ticket 1: The Happy Path (Task: Wi-Fi Outage)</h1>
+      <p class="lead-text">Watch the live Jira projector screen as we move our first operational incident through the board:</p>
+      <div class="grid-2">
+        <div class="card" style="border-left: 6px solid var(--accent-green); padding: 36px;">
+          <div class="ticket-id" style="font-size: 1.45rem;">DBC-1 (Task - 2 Story Points)</div>
+          <h3 style="margin-top: 8px; font-size: 2.1rem;">Wi-Fi dropped at DB Cafe billing counter</h3>
+          <p style="margin-top: 16px; font-size: 1.65rem;"><strong>The Problem:</strong> Tablet lost Wi-Fi connection; digital orders cannot reach kitchen printer.</p>
+          <div style="margin-top: 24px; padding: 22px; background: var(--card-bg); border-radius: 8px; border: 2px solid var(--card-border); border-left: 5px solid var(--accent-green); font-size: 1.55rem;">
+            <strong style="color: var(--accent-green);">Operational Fix (Commented in Ticket):</strong><br>
+            <em>"Switched billing tablet to Manager's 5G mobile hotspot. Connectivity restored; offline receipts synced."</em>
+          </div>
+        </div>
+        <div class="card" style="justify-content: center; padding: 36px;">
+          <h3 style="color: var(--primary); font-size: 2.1rem;">Live Jira Actions Executed:</h3>
+          <ol style="line-height: 2.3; margin-top: 16px; font-size: 1.65rem;">
+            <li>Drag DBC-1: <code>To Do</code> → <code>In Progress</code>.</li>
+            <li>Assign ticket to Facilitator.</li>
+            <li>Enter practical 2-line fix in the Comments section.</li>
+            <li>Move to <code>Review</code> → PO approves → Move to <code>Done</code>.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Sprint 1 Demo - Ticket 2 (Review Rejection) -->
+    <div class="slide" data-notes="Demonstrate DBC-2. Dev submits without sauce packets. PO spots it in Review! Drag card BACKWARDS from Review to In Progress. Dev adds sauce, updates comment, moves to Review, then Done. Highlight: Review is a real gate! Incomplete work moves backwards!">
+      <span class="module-tag">Module 4: Sprint 1 Live Walkthrough</span>
+      <h1>Ticket 2: The Review Rejection (Story Backwards Flow)</h1>
+      <p class="lead-text">Review is a quality firewall, not a rubber stamp. Incomplete work gets rejected backwards:</p>
+      <div class="grid-2">
+        <div class="card" style="border-left: 6px solid var(--accent-red); padding: 36px;">
+          <div class="ticket-id" style="font-size: 1.45rem;">DBC-2 (User Story - 3 Points)</div>
+          <h3 style="margin-top: 8px; font-size: 2.1rem;">Veg Fried Rice Order</h3>
+          <p style="margin-top: 12px; font-size: 1.65rem;"><strong>Acceptance Criteria (DoD):</strong></p>
+          <ul style="font-size: 1.55rem; line-height: 1.7;">
+            <li>Cook time under 8 minutes.</li>
+            <li>Packed in eco-friendly container.</li>
+            <li><span style="color: var(--accent-red); font-weight: 800;">Includes 2 chili sauce sachets in the bag!</span></li>
+          </ul>
+          <div style="margin-top: 20px; padding: 18px; background: rgba(239,68,68,0.15); border: 1.5px solid var(--accent-red); border-radius: 8px; font-size: 1.5rem;">
+            <strong>🚨 The Rejection:</strong> Developer packed the box but omitted the sauce! Product Owner moves card <strong>BACKWARDS</strong>: <code>Review</code> → <code>In Progress</code>!
+          </div>
+        </div>
+        <div class="card" style="justify-content: center; padding: 36px;">
+          <h3 style="color: var(--accent-gold); font-size: 2.1rem;">Why Backwards Movement Matters:</h3>
+          <p style="margin-top: 14px; font-size: 1.65rem; line-height: 1.6;">In junior teams, developers push broken work to Done hoping nobody notices. In high-performing Agile teams, the Product Owner protects quality.</p>
+          <div style="margin-top: 24px; padding: 20px; background: var(--primary-bg-subtle); border-radius: 8px; border-left: 5px solid var(--primary); font-size: 1.55rem;">
+            <strong>Jira Action:</strong> Card moved back to <code>In Progress</code> → Dev adds sauce → Re-submits to <code>Review</code> → PO approves to <code>Done</code>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 11: Sprint 1 Demo - Ticket 3 (The Blocker Flag) -->
+    <div class="slide" data-notes="Demonstrate DBC-3. Paneer is out of stock. Right-click card in Jira -> Add Flag. Card turns yellow. Create linked Bug ticket for vendor restock. Pivot to other work.">
+      <span class="module-tag">Module 4: Sprint 1 Live Walkthrough</span>
+      <h1>Ticket 3: Out-of-Stock Blocker Flag</h1>
+      <p class="lead-text">When an external dependency halts work, flag it immediately rather than suffering in silence:</p>
+      <div class="grid-2">
+        <div class="card" style="border-left: 6px solid var(--accent-gold); padding: 36px;">
+          <div class="ticket-id" style="font-size: 1.45rem;">DBC-3 (Story - 5 Points)</div>
+          <h3 style="margin-top: 8px; font-size: 2.1rem;">Order #142: Double Paneer Manchurian</h3>
+          <p style="margin-top: 14px; font-size: 1.65rem;"><strong>The Crisis:</strong> Ticket moves to <code>In Progress</code>. Chef opens the fridge—there is <strong>ZERO PANEER</strong> left in the entire cafe!</p>
+          <div style="margin-top: 24px; padding: 20px; background: rgba(245,158,11,0.15); border: 2px solid var(--accent-gold); border-radius: 8px; font-size: 1.55rem;">
+            <strong>Jira Action:</strong> Right-Click card → <strong>Add Flag (Impediment)</strong>.<br>
+            Card turns bright yellow with a red flag!
+          </div>
+        </div>
+        <div class="card" style="justify-content: center; padding: 36px;">
+          <h3 style="color: var(--accent-green); font-size: 2.1rem;">The Golden Rule of Blockers:</h3>
+          <p style="margin-top: 14px; font-size: 1.65rem; line-height: 1.6;">Flagging creates instant transparency across the whole engineering board.</p>
+          <p style="margin-top: 14px; font-size: 1.65rem; line-height: 1.6;">We log a linked Bug: <code>DBC-4: Urgent raw material shortage - Paneer (5kg)</code>, and developers immediately pivot to unblocked tickets.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Sprint 2 Team Rules -->
+    <div class="slide" data-notes="Hand over control to the 10 teams! Assign roles: 1 PO (Review gatekeeper), 1 Scrum Master (PointingPoker & timer), 4 Developers (Chefs). Start the 20-minute countdown!">
+      <span class="module-tag">Module 5: 10 Teams on the Floor</span>
+      <h1>Sprint 2: Team Hands-On Simulation</h1>
+      <p class="lead-text">Now it's your turn. 10 teams of 6 engineers will manage their own DB Cafe sprint under strict capacity constraints:</p>
+      
+      <div class="grid-3">
+        <div class="card" style="padding: 34px;">
+          <h3 style="color: var(--primary); font-size: 2rem;">👥 Assigned Team Roles</h3>
+          <ul style="font-size: 1.55rem; line-height: 1.7;">
+            <li><strong>1 Product Owner:</strong> Guards capacity & approves the <code>Review</code> column.</li>
+            <li><strong>1 Scrum Master:</strong> Runs PointingPoker & tracks timer.</li>
+            <li><strong>4 Developers (Chefs):</strong> Drafts 2-line practical SOP fixes.</li>
+          </ul>
+        </div>
+        <div class="card" style="padding: 34px;">
+          <h3 style="color: var(--accent-gold); font-size: 2rem;">🛡️ Capacity Constraint</h3>
+          <p style="margin-top: 10px; font-size: 1.6rem; line-height: 1.6;"><strong>Strict 10 Story Points Max!</strong> The backlog has 10 stories totaling 34 points. You must reject, defer, and prioritize ruthlessly.</p>
+        </div>
+        <div class="card" style="justify-content: center; align-items: center; text-align: center; padding: 34px;">
+          <h3 style="color: var(--accent-green); font-size: 2rem;">⏱️ Live Sprint Timer</h3>
+          <div style="margin-top: 16px;">
+            <div class="sprint-timer-widget">
+              <span class="sprint-timer-display" id="sprint-timer">20:00</span>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center; margin-top: 16px;">
+              <button onclick="startSprintTimer()" class="primary-btn" style="font-size: 1.15rem; padding: 12px 24px;">Start Sprint</button>
+              <button onclick="pauseSprintTimer()" style="font-size: 1.15rem; padding: 12px 24px;">Pause</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 13: Sprint 2 Backlog Menu -->
+    <div class="slide" data-notes="Give teams 3 minutes to review the 10 candidate stories. Warn them again that some stories are traps! Look out for Biryani Festival (Feature) and Avocado Toast!">
+      <span class="module-tag">Module 5: The Sprint 2 Backlog Menu</span>
+      <h1>Select Your 10-Point Sprint Commitment</h1>
+      <p class="lead-text">10 candidate items total 34 points. Choose wisely—some are high-value Stories, others are multi-sprint Features or traps!</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; flex: 1;">
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem;"><code>ST-01 (Story)</code> <strong>Peak Lunch Cold Coffee Rush</strong> (3 Pts) — Pre-brew 30 bottles for fast pickup.</div>
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem;"><code>ST-02 (Story)</code> <strong>Faculty Express Lunch Boxes</strong> (5 Pts) — 10 combos to Mech Dept strictly by 1:20 PM.</div>
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem;"><code>ST-03 (Story)</code> <strong>Spill-Proof Packaging for Sambar</strong> (3 Pts) — Double-wrap liquids to prevent leaks.</div>
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem;"><code>ST-04 (Task)</code> <strong>Allergy & Jain Food Color Stickers</strong> (2 Pts) — Green/Red stickers for dietary safety.</div>
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem;"><code>ST-05 (Task)</code> <strong>Digital UPI Payment Soundbox</strong> (3 Pts) — Instant chime verification at counter.</div>
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem;"><code>ST-06 (Story)</code> <strong>Student Loyalty Canteen Card</strong> (3 Pts) — 1 stamp per ₹100 spent (Nice to have).</div>
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem; border: 2.5px dashed var(--accent-red);"><code>ST-07 (Feature)</code> <strong>Plan 3-Day Biryani Fest (5 Types!)</strong> (8 Pts) — Multi-sprint scope creep!</div>
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem; border: 2.5px dashed var(--accent-gold);"><code>ST-08 (Story)</code> <strong>VIP Custom Avocado Toast with Feta</strong> (5 Pts) — Zero-stock dependency trap!</div>
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem; border: 2.5px dashed var(--card-border);"><code>ST-09 (Feature)</code> <strong>Install Swiss Chocolate Fountain</strong> (8 Pts) — Unaligned luxury distraction.</div>
+        <div class="card" style="padding: 18px 24px; font-size: 1.35rem;"><code>ST-10 (Story)</code> <strong>Quick-Grab Sandwich Station</strong> (2 Pts) — 20 pre-made cheese sandwiches ready.</div>
+      </div>
+    </div>
+
+    <!-- Slide 14: Sprint 2 Injected Curveballs -->
+    <div class="slide" data-notes="Inject these live! At Minute 8: Gas cylinder #2 failure. At Minute 14: Campus Director emergency high tea platter. Watch how teams react.">
+      <span class="module-tag">Module 5: Live Production Alerts</span>
+      <h1>🚨 In-Sprint Chaos Injections!</h1>
+      <p class="lead-text">Just when your sprint is running smoothly, unexpected operational friction strikes:</p>
+      
+      <div class="grid-2">
+        <div class="card" style="border-left: 6px solid var(--accent-red); padding: 36px;">
+          <div style="font-size: 1.15rem; color: var(--accent-red); font-weight: 800;">INJECTED AT MINUTE 8</div>
+          <h3 style="margin-top: 8px; font-size: 2.2rem;">⚠️ Kitchen Alert: Gas Cylinder #2 Depleted</h3>
+          <p style="margin-top: 16px; font-size: 1.65rem; line-height: 1.6;">The main burner is at 50% capacity. Any story requiring heavy cooking (Points > 4) is now throttled! What does your PO do?</p>
+        </div>
+        <div class="card" style="border-left: 6px solid var(--accent-gold); padding: 36px;">
+          <div style="font-size: 1.15rem; color: var(--accent-gold); font-weight: 800;">INJECTED AT MINUTE 14</div>
+          <h3 style="margin-top: 8px; font-size: 2.2rem;">👑 Emergency: Campus Director High-Tea</h3>
+          <p style="margin-top: 16px; font-size: 1.65rem; line-height: 1.6;">The college accreditation committee arrived unannounced. Director demands 8 high-tea snack platters right now! Do you blindly accept and blow up your sprint, or negotiate capacity?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 15: Show of Hands Debrief -->
+    <div class="slide" data-notes="Conduct the show of hands interrogation! 1) Who took Biryani fest? (Call them out on scope creep!). 2) Who took Avocado toast? (Call out zero stock!). Call up 2 teams and mirror their tickets live into Jira.">
+      <span class="module-tag">Module 6: The Interrogation</span>
+      <h1>Show of Hands: Who Took the Bait?</h1>
+      <p class="lead-text">Time is up! Let's examine how each team managed priority and pressure:</p>
+      
+      <div class="grid-3">
+        <div class="card" style="border-top: 6px solid var(--accent-red); padding: 34px;">
+          <h3 style="color: var(--accent-red); font-size: 2rem;">🍛 The Biryani Feature Trap</h3>
+          <p style="font-size: 1.6rem;"><strong>"How many teams took up the 3-Day Biryani Festival with 5 varieties? Raise hands!"</strong></p>
+          <div style="margin-top: 20px; font-size: 1.45rem; color: var(--text-sub); line-height: 1.55;">
+            🚨 <strong>Verdict:</strong> Feature Scope Creep! Burning 80% of your sprint capacity on a multi-sprint Feature next month while students wait for lunch is bad engineering. Correct answer: Defer to Product Backlog!
+          </div>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--accent-gold); padding: 34px;">
+          <h3 style="color: var(--accent-gold); font-size: 2rem;">🥑 The Avocado Dependency Trap</h3>
+          <p style="font-size: 1.6rem;"><strong>"Who tried to fulfill the VIP Avocado Toast? How?"</strong></p>
+          <div style="margin-top: 20px; font-size: 1.45rem; color: var(--text-sub); line-height: 1.55;">
+            🚨 <strong>Verdict:</strong> Zero-Stock Trap! DB Cafe does not stock avocados! Accepting tasks without checking dependencies guarantees failure. Must reject upfront.
+          </div>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--primary); padding: 34px;">
+          <h3 style="color: var(--primary); font-size: 2rem;">👑 The Director Curveball</h3>
+          <p style="font-size: 1.6rem;"><strong>"How did your team handle the surprise VIP high-tea request?"</strong></p>
+          <div style="margin-top: 20px; font-size: 1.45rem; color: var(--text-sub); line-height: 1.55;">
+            💡 <strong>Verdict:</strong> Disciplined Trade-Off! Agile teams don't say 'No' to leadership; they say: <em>"We can take this, but which of our committed tickets should we drop to keep within 10 points?"</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 16: Retrospective & Burndown -->
+    <div class="slide" data-notes="Click Complete Sprint in Jira. Open the Burndown Chart. Explain the ideal guideline vs actual remaining work line. Show what flatlines (bottlenecks) and steep drops (batching) mean.">
+      <span class="module-tag">Module 7: Inspect & Adapt</span>
+      <h1>Reading the Jira Burndown Chart</h1>
+      <p class="lead-text">When we hit <strong>Complete Sprint</strong>, Jira generates our velocity and burndown telemetry:</p>
+      
+      <div class="grid-2">
+        <div class="card" style="padding: 36px;">
+          <h3 style="color: var(--primary); font-size: 2.1rem;">📉 Burndown Telemetry</h3>
+          <ul style="line-height: 2.1; font-size: 1.6rem;">
+            <li><strong>Ideal Guideline:</strong> Straight line showing steady task completion over time.</li>
+            <li><strong>Actual Remaining Work:</strong> Step-down line tracking story points completed.</li>
+            <li><strong>The Flatline:</strong> Shows where tasks got stuck in <code>Review</code> or were blocked by external dependencies.</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left: 6px solid var(--primary); padding: 36px;">
+          <h3 style="color: var(--accent-green); font-size: 2.1rem;">🔄 The 3 Retrospective Questions</h3>
+          <ol style="line-height: 2.1; margin-top: 12px; font-size: 1.6rem;">
+            <li><strong>What went well:</strong> What kept work flowing cleanly to Done?</li>
+            <li><strong>What caused rework:</strong> Why were cards rejected backwards in <code>Review</code>?</li>
+            <li><strong>Process Improvement:</strong> What is one rule we will enforce in our next sprint?</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 17: Career Roles & AI Era -->
+    <div class="slide" data-notes="Explain why Agile matters MORE now that AI coding assistants exist. Code is becoming cheap. Requirements, backlog prioritization, and review governance are becoming priceless.">
+      <span class="module-tag">Module 8: Industry Relevance</span>
+      <h1>Agile in the AI Era: Why It Matters MORE</h1>
+      <p class="lead-text">Why does Agile matter when AI coding assistants (Copilot, Cursor, Gemini Code Assist) write code in seconds?</p>
+      
+      <div class="grid-2">
+        <div class="card" style="border-top: 6px solid var(--accent-red); padding: 36px;">
+          <h3 style="color: var(--accent-red); font-size: 2.1rem;">🤖 "Code is Becoming Cheap"</h3>
+          <p style="margin-top: 12px; font-size: 1.6rem; line-height: 1.6;">Generative AI generates boilerplate, functions, and SQL in seconds. But AI cannot guess business value or user trade-offs.</p>
+          <p style="margin-top: 16px; font-size: 1.6rem; line-height: 1.6;">A vague prompt generates 500 lines of buggy, hallucinated code 10x faster. The human bottleneck has shifted to <strong>Requirement Clarity & Governance</strong>.</p>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--accent-green); padding: 36px;">
+          <h3 style="color: var(--accent-green); font-size: 2.1rem;">💎 The High-Value Human Roles</h3>
+          <ul style="line-height: 2.1; font-size: 1.6rem;">
+            <li><strong>Product Owner / PM:</strong> Defines the <em>What</em>, writes acceptance criteria, guards business vision.</li>
+            <li><strong>Scrum Master / Agile Coach:</strong> Optimizes human-AI velocity, removes cross-team friction.</li>
+            <li><strong>Agile Software Engineer:</strong> Uses AI to write code, but uses Jira to validate against the <code>Review</code> gate.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 18: Capstone Mapping -->
+    <div class="slide" data-notes="Connect DB Cafe back to their final-year engineering capstone projects. Show the direct mapping table.">
+      <span class="module-tag">Module 8: Engineering Capstone Alignment</span>
+      <h1>From DB Cafe to Final-Year Engineering</h1>
+      <p class="lead-text">Every single operational concept we simulated today maps 1:1 to your engineering projects:</p>
+      
+      <div style="background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 12px; overflow: hidden; width: 100%; flex: 1;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 1.45rem; text-align: left; height: 100%;">
+          <thead>
+            <tr style="background: var(--kanban-col-bg); color: var(--primary); border-bottom: 2px solid var(--card-border);">
+              <th style="padding: 18px 24px;">DB Cafe Simulation Incident</th>
+              <th style="padding: 18px 24px;">Software Capstone Equivalent</th>
+              <th style="padding: 18px 24px;">Jira Governance Artifact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1.5px solid var(--card-border);">
+              <td style="padding: 18px 24px;">Zero Paneer in Walk-in Fridge</td>
+              <td style="padding: 18px 24px;">Missing API Key / Database Credentials</td>
+              <td style="padding: 18px 24px;"><span class="ticket-badge badge-flag">Flagged Blocker</span></td>
+            </tr>
+            <tr style="border-bottom: 1.5px solid var(--card-border);">
+              <td style="padding: 18px 24px;">Forgot Sauce Sachet in Fried Rice</td>
+              <td style="padding: 18px 24px;">Pull Request Rejected for Missing Unit Tests</td>
+              <td style="padding: 18px 24px;">Moved backwards: <code>Review</code> → <code>In Progress</code></td>
+            </tr>
+            <tr style="border-bottom: 1.5px solid var(--card-border);">
+              <td style="padding: 18px 24px;">Biryani Festival Distraction</td>
+              <td style="padding: 18px 24px;">Adding AI Chatbot 2 days before final submission</td>
+              <td style="padding: 18px 24px;">Scope Creep → Defer to Product Backlog</td>
+            </tr>
+            <tr>
+              <td style="padding: 18px 24px;">10-Point Sprint Budget</td>
+              <td style="padding: 18px 24px;">Weekly team workload commitment</td>
+              <td style="padding: 18px 24px;">Sprint Velocity Ceiling</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Slide 19: Wrap-Up & Next Steps -->
+    <div class="slide" data-notes="Thank the students! Give them their next steps: Sign up for free Jira Cloud, use the student reference guide, and put Jira on their resumes!">
+      <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+        <span class="module-tag" style="color: var(--accent-green); font-size: 1.5rem;">SIMULATION COMPLETE</span>
+        <h1 style="font-size: 4rem; margin-bottom: 22px;">You Survived the Rush Hour!</h1>
+        <p class="lead-text" style="margin: 0 auto 40px auto; max-width: 1400px; font-size: 1.85rem;">
+          You prioritized under pressure, defended capacity against scope creep, enforced quality in Review, and mastered visual project governance.
+        </p>
+        
+        <div class="card" style="text-align: left; max-width: 1250px; margin: 0 auto 40px auto; width: 100%; padding: 34px;">
+          <h3 style="color: var(--primary); font-size: 1.85rem;">🚀 Your Immediate Next Steps:</h3>
+          <ul style="line-height: 2.1; margin-top: 16px; font-size: 1.55rem;">
+            <li>Sign up for your own Free Jira Cloud account: <strong style="color: var(--text-main);">atlassian.com/software/jira</strong> (Free for up to 10 users).</li>
+            <li>Configure a Scrum board with <code>Review</code> column for your semester projects.</li>
+            <li>Highlight <em>"Agile, Scrum & Jira Sprint Governance"</em> on your engineering portfolio.</li>
+          </ul>
+        </div>
+        <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-gold);">Questions & Answers Floor Open 💬</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Speaker Notes Panel -->
+  <div id="notes-panel">
+    <h4>
+      <span>🎙️ Presenter Script & Notes</span>
+      <span onclick="toggleNotes()" style="cursor: pointer; font-size: 1rem; color: var(--text-muted);">[Close X]</span>
+    </h4>
+    <div id="notes-content"></div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Footer Navigation Info -->
+  <footer>
+    <div>Use <strong>◀ Left / Right ▶</strong> arrows or buttons to navigate. Press <strong>S</strong> for speaker notes.</div>
+    <div>Interactive Simulation of Scrum and Agile Dynamics</div>
+  </footer>
+
+  <!-- Script for Navigation, Timer, Theme & Voting -->
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const counter = document.getElementById('slide-counter');
+    const progressBar = document.getElementById('progress-bar');
+    const notesPanel = document.getElementById('notes-panel');
+    const notesContent = document.getElementById('notes-content');
+
+    function updateSlide() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+      counter.innerText = `${currentSlide + 1} / ${totalSlides}`;
+      progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+      
+      const notes = slides[currentSlide].getAttribute('data-notes') || 'No notes for this slide.';
+      notesContent.innerHTML = notes;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function toggleNotes() {
+      notesPanel.style.display = (notesPanel.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+    }
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      } else if (e.key === 's' || e.key === 'S') {
+        toggleNotes();
+      } else if (e.key === 't' || e.key === 'T') {
+        toggleTheme();
+      }
+    });
+
+    // Wall Clock
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('clock-display').innerText = now.toTimeString().split(' ')[0];
+    }, 1000);
+
+    // Voting Interaction: Buttons do NOT show answer until clicked!
+    function revealVote(button, isCorrect, expId) {
+      const parent = button.parentElement;
+      const buttons = parent.querySelectorAll('.vote-btn');
+      buttons.forEach(b => {
+        b.classList.remove('selected-correct', 'selected-wrong');
+      });
+
+      if (isCorrect) {
+        button.classList.add('selected-correct');
+      } else {
+        button.classList.add('selected-wrong');
+      }
+
+      const exp = document.getElementById(expId);
+      if (exp) {
+        exp.style.display = 'block';
+      }
+    }
+
+    // Sprint 2 Countdown Timer
+    let sprintSeconds = 1200; // 20 mins
+    let sprintInterval = null;
+
+    function startSprintTimer() {
+      if (sprintInterval) return;
+      sprintInterval = setInterval(() => {
+        if (sprintSeconds > 0) {
+          sprintSeconds--;
+          const m = Math.floor(sprintSeconds / 60).toString().padStart(2, '0');
+          const s = (sprintSeconds % 60).toString().padStart(2, '0');
+          document.getElementById('sprint-timer').innerText = `${m}:${s}`;
+        } else {
+          clearInterval(sprintInterval);
+          sprintInterval = null;
+          alert("Sprint 2 Time's Up! Hands off the boards!");
+        }
+      }, 1000);
+    }
+
+    function pauseSprintTimer() {
+      clearInterval(sprintInterval);
+      sprintInterval = null;
+    }
+
+    // Initialize
+    updateSlide();
+  </script>
+</body>
+</html>
