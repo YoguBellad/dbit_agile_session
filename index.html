@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interactive Simulation of Scrum and Agile Dynamics</title>
   <style>
-    /* CSS Variables: Pure Jet-Black Dark Theme (No blue tints) & Clean Executive Light Theme */
+    /* CSS Variables: Pure Jet-Black Dark Theme (Zero blue tints) & Clean Executive Light Theme */
     :root[data-theme="dark"] {
       --bg: #000000;
       --bg-gradient: #000000;
@@ -16,7 +16,7 @@
       --text-main: #ffffff;
       --text-sub: #e4e4e7;
       --text-muted: #a1a1aa;
-      --primary: #f59e0b;           /* Warm Amber Gold - High contrast on pure black */
+      --primary: #f59e0b;           /* Warm Amber Gold */
       --primary-border: #d97706;
       --primary-bg-subtle: rgba(245, 158, 11, 0.12);
       --accent-gold: #fbbf24;
@@ -233,14 +233,6 @@
       width: 100%;
     }
 
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      flex: 1;
-      width: 100%;
-    }
-
     .card {
       background: var(--card-bg);
       border: 2px solid var(--card-border);
@@ -329,7 +321,7 @@
     .tag-task { background: #0284c7; }
     .tag-bug { background: #dc2626; }
 
-    /* Voting Containers & Buttons (NO answers displayed in button text) */
+    /* Standard 4-Option Quiz Buttons (Slide 5 & 6) */
     .voting-container {
       background: var(--voting-box-bg);
       border: 2px solid var(--card-border);
@@ -351,10 +343,10 @@
       line-height: 1.5;
     }
 
-    .voting-options {
+    .voting-options-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
     }
 
     .vote-btn {
@@ -564,7 +556,7 @@
     <div class="header-controls">
       <button onclick="toggleTheme()" id="theme-btn" title="Toggle Light/Dark Theme">🌓 Theme</button>
       <button onclick="prevSlide()">◀ Prev (←)</button>
-      <span id="slide-counter" style="font-size: 1.2rem; font-weight: 800; color: var(--primary); min-width: 70px; text-align: center;">1 / 19</span>
+      <span id="slide-counter" style="font-size: 1.2rem; font-weight: 800; color: var(--primary); min-width: 70px; text-align: center;">1 / 24</span>
       <button onclick="nextSlide()" class="primary-btn">Next (→) ▶</button>
       <button onclick="toggleNotes()">🎙️ Notes (S)</button>
     </div>
@@ -573,7 +565,7 @@
   <!-- Slide Viewport -->
   <div id="slide-viewport">
 
-    <!-- Slide 1: Title -->
+    <!-- Slide 1: Title (Numbers removed & Jira columns removed from slide 1) -->
     <div class="slide active" data-notes="Welcome everyone! In academic courses, Agile and Scrum can feel like abstract definitions. Today, we aren't writing code. We are stepping onto the floor of DB Cafe during a chaotic Friday lunch rush. By the end of these two hours, your team will have lived the sprint cycle.">
       <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
         <span class="module-tag" style="margin-bottom: 16px;">HANDS-ON ENGINEERING SIMULATION</span>
@@ -581,31 +573,26 @@
         <p class="lead-text" style="font-size: 1.9rem; margin: 0 auto 40px auto; max-width: 1400px;">
           Mastering Sprints, Backlog Prioritization, Review Gates, and Team Flow under High-Pressure Constraints.
         </p>
-        <div class="grid-3" style="max-width: 1400px; margin: 0 auto; width: 100%;">
-          <div class="card" style="text-align: left; padding: 28px;">
+        <div class="grid-2" style="max-width: 1100px; margin: 0 auto; width: 100%;">
+          <div class="card" style="text-align: left; padding: 32px;">
+            <div style="font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Experience</div>
+            <div style="font-weight: 900; font-size: 2rem; color: var(--primary); margin-top: 8px;">2 Simulated Sprints</div>
+            <p style="font-size: 1.5rem; margin-top: 10px;">Sprint 1: Guided Live Walkthrough<br>Sprint 2: Team Hands-On Simulation</p>
+          </div>
+          <div class="card" style="text-align: left; padding: 32px;">
             <div style="font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Structure</div>
-            <div style="font-weight: 900; font-size: 1.85rem; color: var(--primary); margin-top: 8px;">2 Simulated Sprints</div>
-            <p style="font-size: 1.35rem; margin-top: 8px;">Sprint 1: Live Demo<br>Sprint 2: 10 Teams Trial</p>
-          </div>
-          <div class="card" style="text-align: left; padding: 28px;">
-            <div style="font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Participants</div>
-            <div style="font-weight: 900; font-size: 1.85rem; color: var(--accent-gold); margin-top: 8px;">10 Teams of 6</div>
-            <p style="font-size: 1.35rem; margin-top: 8px;">PO Gatekeeper, Scrum Master & Operations Developers</p>
-          </div>
-          <div class="card" style="text-align: left; padding: 28px;">
-            <div style="font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Jira Workflow</div>
-            <div style="font-weight: 900; font-size: 1.85rem; color: var(--accent-green); margin-top: 8px;">4 Live Columns</div>
-            <p style="font-size: 1.35rem; margin-top: 8px;">To Do → In Progress → Review → Done</p>
+            <div style="font-weight: 900; font-size: 2rem; color: var(--accent-gold); margin-top: 8px;">Cross-Functional Teams</div>
+            <p style="font-size: 1.5rem; margin-top: 10px;">Product Owner Gatekeeper, Scrum Master & Operations Developers</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Slide 2: The Hook (Module 1 - Big Text filling the blocks) -->
+    <!-- Slide 2: The Hook -->
     <div class="slide" data-notes="Set the scene with high urgency! Friday 1:15 PM lunch rush. 60 orders queued, phone ringing, kitchen chaos. In engineering, this is a live production outage. You cannot fix 50 problems simultaneously without breaking everything.">
       <span class="module-tag">Module 1: Production Chaos</span>
       <h1>Welcome to DB Cafe: Friday 1:15 PM Rush Hour</h1>
-      <p class="lead-text">Classes just dismissed. 60 students are crowding the counter, delivery couriers are honking outside, and the kitchen is on fire:</p>
+      <p class="lead-text">Classes just dismissed. A massive crowd is pressing against the counter, delivery couriers are honking outside, and the kitchen is on fire:</p>
       <div class="grid-3">
         <div class="card" style="border-top: 6px solid var(--accent-red); padding: 36px 32px;">
           <h3 style="color: var(--accent-red); font-size: 2.1rem;">💥 Customer Escalation</h3>
@@ -631,7 +618,7 @@
       </div>
     </div>
 
-    <!-- Slide 3: Module 2 Jira Issue Taxonomy -->
+    <!-- Slide 3: Module 2 Jira Issue Taxonomy (KDS removed, Biryani festival as Feature) -->
     <div class="slide" data-notes="Walk through standard Jira issue types. Explain: Epic is multi-quarter/month (we won't use it today). Feature sits between Epic and Story (1-2 sprints, like planning the Biryani Festival!). Story is user-facing in 1 sprint. Task is technical/operational support. Bug is a broken defect. Note: 'Blocker' is an Impediment Flag, not an issue type!">
       <span class="module-tag">Module 2: Jira Issue Taxonomy</span>
       <h1>How Jira Classifies Work: Issue Types & Scope</h1>
@@ -651,7 +638,7 @@
             <td><span class="issue-tag tag-epic">Epic</span></td>
             <td>A large, goal-driven body of work grouping related stories, tasks, or features.</td>
             <td>Multi-sprint / Quarters</td>
-            <td><em>Full Digital Cafe Overhaul</em> (Online Ordering + KDS + Loyalty)</td>
+            <td><em>Full Digital Cafe Overhaul</em> (Online Pre-ordering + Kitchen Tracker + Loyalty)</td>
           </tr>
           <tr>
             <td><span class="issue-tag tag-feature">Feature</span></td>
@@ -684,8 +671,34 @@
       </div>
     </div>
 
-    <!-- Slide 4: Interactive Room Voting (Scenarios A & B) -->
-    <div class="slide" data-notes="Read Scenario A. Ask for show of hands for A, B, C. Click to reveal. Explain why it's a Story (User Story). Then repeat for Scenario B (Bug).">
+    <!-- Slide 4: NEW SLIDE - Backlog & Acceptance Criteria Explained -->
+    <div class="slide" data-notes="Explain what a Backlog is (the prioritized holding area for all future ideas and requirements) and what Acceptance Criteria is (the specific contract between the Product Owner and developers that proves the ticket works before moving to Done).">
+      <span class="module-tag">Module 2: Essential Agile Concepts</span>
+      <h1>The Backlog & Acceptance Criteria</h1>
+      <p class="lead-text">Two foundational concepts that separate high-velocity engineering teams from chaos:</p>
+      
+      <div class="grid-2">
+        <div class="card" style="border-top: 6px solid var(--primary); padding: 34px;">
+          <h3 style="color: var(--primary); font-size: 2.1rem;">📋 The Product Backlog</h3>
+          <p style="font-size: 1.6rem; line-height: 1.6;">The single source of truth containing <strong>every feature, bug fix, and technical task</strong> that could ever be built.</p>
+          <ul style="font-size: 1.55rem; line-height: 1.8; margin-top: 14px;">
+            <li><strong>Not Everything Gets Done:</strong> Items at the top are estimated and ready; items at the bottom are rough ideas.</li>
+            <li><strong>Product Backlog vs. Sprint Backlog:</strong> The Sprint Backlog is only the small slice your team commits to for the active 1–2 week cycle.</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--accent-green); padding: 34px;">
+          <h3 style="color: var(--accent-green); font-size: 2.1rem;">✅ Acceptance Criteria</h3>
+          <p style="font-size: 1.6rem; line-height: 1.6;">The <strong>Definition of Done</strong> for a single ticket. The conditions that must be tested and proven true before work is approved.</p>
+          <ul style="font-size: 1.55rem; line-height: 1.8; margin-top: 14px;">
+            <li><strong>No Assumptions:</strong> Eliminates *"I thought you meant..."* miscommunication between PO and developers.</li>
+            <li><strong>Example:</strong> *"Veg Fried Rice cooked under 8 mins, packaged in eco-box, includes 2 chili sauce sachets."*</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Interactive Room Voting (Scenarios A & B - Uniform 4 Options) -->
+    <div class="slide" data-notes="Read Scenario A. Ask for show of hands for A, B, C, D. Click to reveal. Explain why it's a Story. Repeat for Scenario B (Bug).">
       <span class="module-tag">Module 2: Interactive Room Voting</span>
       <h1>Cast Your Vote: Identify the Jira Issue Type</h1>
       <p class="lead-text">Examine each incident from the DB Cafe floor. Vote on the correct Jira issue type:</p>
@@ -695,10 +708,11 @@
         <div class="scenario-box">
           <strong>Scenario A:</strong> The ordering app lets students place orders for Paneer Rolls, but the kitchen is out of paneer. We need the app to automatically gray out sold-out items in real time.
         </div>
-        <div class="voting-options">
+        <div class="voting-options-grid">
           <button class="vote-btn" onclick="revealVote(this, false, 'exp1')">A) Bug</button>
-          <button class="vote-btn" onclick="revealVote(this, true, 'exp1')">B) Story (User Story)</button>
+          <button class="vote-btn" onclick="revealVote(this, true, 'exp1')">B) Story</button>
           <button class="vote-btn" onclick="revealVote(this, false, 'exp1')">C) Task</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp1')">D) Feature</button>
         </div>
         <div id="exp1" class="vote-explanation">
           💡 <strong>Facilitator Explains:</strong> The app didn't crash—it executed its existing code! It requires a user-facing requirement: <em>"As a customer/cashier, I want out-of-stock items grayed out..."</em>. That is a <strong>Story (User Story)</strong>!
@@ -710,10 +724,11 @@
         <div class="scenario-box">
           <strong>Scenario B:</strong> When the counter power cord is bumped, the receipt printer cuts off, and the student's paid order slip is permanently lost from memory.
         </div>
-        <div class="voting-options">
+        <div class="voting-options-grid">
           <button class="vote-btn" onclick="revealVote(this, true, 'exp2')">A) Bug</button>
-          <button class="vote-btn" onclick="revealVote(this, false, 'exp2')">B) Task</button>
-          <button class="vote-btn" onclick="revealVote(this, false, 'exp2')">C) Story (User Story)</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp2')">B) Story</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp2')">C) Task</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp2')">D) Feature</button>
         </div>
         <div id="exp2" class="vote-explanation">
           💡 <strong>Facilitator Explains:</strong> Payment succeeded, but the expected confirmation slip was destroyed. Expected functionality is actively failing. That is a critical <strong>Bug</strong>!
@@ -721,10 +736,10 @@
       </div>
     </div>
 
-    <!-- Slide 5: Interactive Room Voting (Scenarios C & D) -->
+    <!-- Slide 6: Interactive Room Voting (Scenarios C & D - Uniform 4 Options) -->
     <div class="slide" data-notes="Read Scenario C (Task - operational work). Click to reveal. Read Scenario D (Feature - Biryani festival, spans 1-2 sprints, too big for 1 story). Click to reveal.">
       <span class="module-tag">Module 2: Interactive Room Voting</span>
-      <h1>Cast Your Vote: Tasks vs. Multi-Sprint Features</h1>
+      <h1>Cast Your Vote: Identify the Jira Issue Type</h1>
       <p class="lead-text">Two more operational scenarios from DB Cafe. Vote on how Jira categorizes them:</p>
       
       <!-- Scenario C -->
@@ -732,13 +747,14 @@
         <div class="scenario-box">
           <strong>Scenario C:</strong> Configuring the manager's 5G mobile hotspot, setting up local Wi-Fi passwords, and testing printer IP connectivity before rush hour starts.
         </div>
-        <div class="voting-options">
-          <button class="vote-btn" onclick="revealVote(this, false, 'exp3')">A) Story (User Story)</button>
-          <button class="vote-btn" onclick="revealVote(this, true, 'exp3')">B) Task (Operational / Tech)</button>
-          <button class="vote-btn" onclick="revealVote(this, false, 'exp3')">C) Feature</button>
+        <div class="voting-options-grid">
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp3')">A) Bug</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp3')">B) Story</button>
+          <button class="vote-btn" onclick="revealVote(this, true, 'exp3')">C) Task</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp3')">D) Feature</button>
         </div>
         <div id="exp3" class="vote-explanation">
-          💡 <strong>Facilitator Explains:</strong> This is technical / operational infrastructure work that supports the kitchen. It has no user persona ("As a user..."), takes a few hours, and enables the team. That is a <strong>Task</strong>!
+          💡 <strong>Facilitator Explains:</strong> Technical/operational infrastructure work. It doesn't have an "As a user..." persona, takes a few hours, and enables the kitchen to run. That is a <strong>Task</strong>!
         </div>
       </div>
 
@@ -747,18 +763,19 @@
         <div class="scenario-box">
           <strong>Scenario D:</strong> Organizing the "3-Day Grand Biryani Festival": Sourcing commercial cauldrons, negotiating bulk basmati rice vendors, designing banners, and scheduling extra chef shifts.
         </div>
-        <div class="voting-options">
-          <button class="vote-btn" onclick="revealVote(this, false, 'exp4')">A) Story (Single Sprint)</button>
-          <button class="vote-btn" onclick="revealVote(this, true, 'exp4')">B) Feature (Multi-Sprint Scope)</button>
-          <button class="vote-btn" onclick="revealVote(this, false, 'exp4')">C) Bug</button>
+        <div class="voting-options-grid">
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp4')">A) Bug</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp4')">B) Story</button>
+          <button class="vote-btn" onclick="revealVote(this, false, 'exp4')">C) Task</button>
+          <button class="vote-btn" onclick="revealVote(this, true, 'exp4')">D) Feature</button>
         </div>
         <div id="exp4" class="vote-explanation">
-          💡 <strong>Facilitator Explains:</strong> Way too massive for a single lunch sprint! It spans 1 to 2 sprints and involves multiple sub-deliverables. This is a <strong>Feature</strong> (or mini-Epic). If pulled into a 15-minute sprint, it causes catastrophic scope creep!
+          💡 <strong>Facilitator Explains:</strong> Way too massive for a single lunch sprint! It spans 1 to 2 sprints and involves multiple sub-deliverables. This is a <strong>Feature</strong>. If pulled into a 15-minute sprint, it causes catastrophic scope creep!
         </div>
       </div>
     </div>
 
-    <!-- Slide 6: Sizing & PointingPoker -->
+    <!-- Slide 7: Sizing & PointingPoker -->
     <div class="slide" data-notes="Introduce Story Points and Fibonacci sequence. Sizing is complexity, risk, and effort—not hours! Have teams navigate to www.pointingpoker.com on their laptop to prepare for Sprint 2 estimation.">
       <span class="module-tag">Module 3: Sizing the Work</span>
       <h1>Story Points & PointingPoker.com</h1>
@@ -785,7 +802,7 @@
       </div>
     </div>
 
-    <!-- Slide 7: The Agile Defense Toolkit -->
+    <!-- Slide 8: The Agile Defense Toolkit -->
     <div class="slide" data-notes="Equip them with the defense toolkit! Make sure they understand: (1) Capacity budget is 10 points. (2) Saying 'No' to scope creep is professional engineering. (3) Out-of-stock items must be rejected.">
       <span class="module-tag">Module 3: Strategic Protection</span>
       <h1>The Agile Defense Toolkit</h1>
@@ -807,17 +824,123 @@
       </div>
     </div>
 
-    <!-- Slide 8: The Board Architecture -->
-    <div class="slide" data-notes="Walk through your live Jira board columns: To Do -> In Progress -> Review -> Done. Emphasize that Review is not a formality; it is where the Product Owner validates Acceptance Criteria.">
-      <span class="module-tag">Module 4: Mission Control</span>
-      <h1>Live Jira Board: 4 Essential Columns</h1>
-      <p class="lead-text">Main screen live on <strong>yogudgz-jiratry1794500986450.atlassian.net</strong>. Every ticket travels through 4 strict columns:</p>
+    <!-- Slide 9: NEW - Module 4 Step 1: Create Jira Account & Space Live -->
+    <div class="slide" data-notes="Demonstrate creating a Jira project space live on the projector! Show how to choose Scrum or Kanban, enter a project name like DB Cafe Operations, and generate a project key like DBC. No pre-created link needed—we create it right now!">
+      <span class="module-tag">Module 4: Live Setup • Step 1</span>
+      <h1>Creating Your Jira Account & Space Live</h1>
+      <p class="lead-text">Watch the live screen as we spin up our team's mission control from scratch on Jira Cloud:</p>
+      
+      <div class="grid-2">
+        <div class="card" style="border-left: 6px solid var(--primary); padding: 36px;">
+          <h3 style="color: var(--primary); font-size: 2.1rem;">🛠️ Setting Up Jira Cloud</h3>
+          <ol style="line-height: 2.2; font-size: 1.6rem; margin-top: 14px;">
+            <li>Navigate to <strong>atlassian.com/software/jira</strong>.</li>
+            <li>Click <strong>Get it Free</strong> (log in via Google / Atlassian).</li>
+            <li>Claim your team site domain (e.g., <em>yourteam-jiraspace.atlassian.net</em>).</li>
+          </ol>
+        </div>
+        <div class="card" style="border-left: 6px solid var(--accent-green); padding: 36px;">
+          <h3 style="color: var(--accent-green); font-size: 2.1rem;">🚀 Creating the Project Space</h3>
+          <ol style="line-height: 2.2; font-size: 1.6rem; margin-top: 14px;">
+            <li>Select Template: <strong>Scrum</strong> (or Kanban).</li>
+            <li>Select Type: <strong>Team-Managed</strong> (simplest for agile squads).</li>
+            <li>Name your project: <strong>DB Cafe Operations</strong>.</li>
+            <li>Set Project Key: <strong>DBC</strong> (generates ticket IDs like DBC-1, DBC-2).</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: NEW - Module 4 Step 2: Creating Tickets in the Backlog -->
+    <div class="slide" data-notes="Demonstrate creating the 3 initial demo tickets into the Product Backlog live on screen. Show the Issue Type dropdown (Task, Story), write clear summaries, and add Acceptance Criteria into descriptions.">
+      <span class="module-tag">Module 4: Live Setup • Step 2</span>
+      <h1>Creating Tickets in the Product Backlog</h1>
+      <p class="lead-text">Now we capture raw operational chaos into structured Jira backlog items:</p>
+      
+      <div class="grid-3">
+        <div class="card" style="border-top: 6px solid var(--primary); padding: 32px 28px;">
+          <div class="ticket-id" style="font-size: 1.3rem;">DBC-1 (Task)</div>
+          <h3 style="font-size: 1.7rem; margin-top: 6px;">Wi-Fi Hotspot Failover</h3>
+          <p style="font-size: 1.45rem; line-height: 1.5; margin-top: 10px;">Billing printer lost connection. Provision mobile 5G hotspot so receipts can print.</p>
+          <div style="margin-top: auto; padding-top: 14px; font-size: 1.25rem; color: var(--text-muted);">Type: Operational Task</div>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--accent-green); padding: 32px 28px;">
+          <div class="ticket-id" style="font-size: 1.3rem;">DBC-2 (Story)</div>
+          <h3 style="font-size: 1.7rem; margin-top: 6px;">Veg Fried Rice Order</h3>
+          <p style="font-size: 1.45rem; line-height: 1.5; margin-top: 10px;">Cook in under 8 mins, pack in eco-box, and include 2 chili sauce sachets.</p>
+          <div style="margin-top: auto; padding-top: 14px; font-size: 1.25rem; color: var(--text-muted);">Type: User Story + DoD</div>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--accent-gold); padding: 32px 28px;">
+          <div class="ticket-id" style="font-size: 1.3rem;">DBC-3 (Story)</div>
+          <h3 style="font-size: 1.7rem; margin-top: 6px;">Double Paneer Manchurian</h3>
+          <p style="font-size: 1.45rem; line-height: 1.5; margin-top: 10px;">Order #142 combo meal. High demand, requires walk-in fridge ingredients.</p>
+          <div style="margin-top: auto; padding-top: 14px; font-size: 1.25rem; color: var(--text-muted);">Type: User Story</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 11: NEW - Module 4 Step 3: Backlog Estimation & Assigning to Sprint -->
+    <div class="slide" data-notes="Demonstrate estimating the tickets in the backlog and dragging them into Sprint 1. Show Story Points field. Total points: 2 + 3 + 5 = 10 Story Points!">
+      <span class="module-tag">Module 4: Live Setup • Step 3</span>
+      <h1>Estimate Tickets & Assign to Sprint</h1>
+      <p class="lead-text">Tickets sitting in the Backlog aren't work yet. We must size them and pull them into our sprint container:</p>
+      
+      <div class="grid-2">
+        <div class="card" style="padding: 36px;">
+          <h3 style="color: var(--primary); font-size: 2.1rem;">🔢 Sizing in the Backlog</h3>
+          <ul style="font-size: 1.6rem; line-height: 2;">
+            <li>Open <code>DBC-1</code> → Assign <strong>2 Story Points</strong> (Straightforward task).</li>
+            <li>Open <code>DBC-2</code> → Assign <strong>3 Story Points</strong> (Standard cooking & packing).</li>
+            <li>Open <code>DBC-3</code> → Assign <strong>5 Story Points</strong> (Complex multi-ingredient combo).</li>
+          </ul>
+        </div>
+        <div class="card" style="padding: 36px; border-left: 6px solid var(--accent-gold);">
+          <h3 style="color: var(--accent-gold); font-size: 2.1rem;">📦 Building Sprint 1</h3>
+          <p style="font-size: 1.6rem; line-height: 1.6;">Click <strong>Create Sprint</strong> in the Backlog view.</p>
+          <p style="font-size: 1.6rem; line-height: 1.6; margin-top: 14px;">Drag DBC-1, DBC-2, and DBC-3 into the <strong>Sprint 1 container</strong>.</p>
+          <div style="margin-top: 20px; padding: 16px; background: var(--primary-bg-subtle); border-radius: 8px; font-size: 1.5rem; font-weight: 800; color: var(--primary);">
+            Total Committed: 10 Story Points (Matches Team Capacity!)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: NEW - Module 4 Step 4: Starting the Sprint -->
+    <div class="slide" data-notes="Click the blue 'Start Sprint' button live on screen! Explain the Sprint Goal and timebox modal. Once started, Jira automatically transitions to the active board!">
+      <span class="module-tag">Module 4: Live Setup • Step 4</span>
+      <h1>Starting Sprint 1: Committing to the Goal</h1>
+      <p class="lead-text">The moment of commitment! When the team clicks <strong>Start Sprint</strong>, the active clock begins:</p>
+      
+      <div class="grid-2">
+        <div class="card" style="border-left: 6px solid var(--accent-green); padding: 36px;">
+          <h3 style="color: var(--accent-green); font-size: 2.1rem;">🚀 The Start Sprint Modal</h3>
+          <ul style="font-size: 1.6rem; line-height: 2;">
+            <li><strong>Sprint Name:</strong> DBC Sprint 1 (Rush Hour Survival).</li>
+            <li><strong>Duration:</strong> 1 Week (or custom simulated timebox).</li>
+            <li><strong>Sprint Goal:</strong> <em>"Restore billing connectivity and fulfill lunch orders with zero missed sauces."</em></li>
+          </ul>
+        </div>
+        <div class="card" style="justify-content: center; align-items: center; text-align: center; padding: 36px;">
+          <h3 style="font-size: 2.2rem; color: var(--primary);">The Big Blue Button</h3>
+          <p style="font-size: 1.6rem; margin: 16px 0;">Clicking <strong>Start Sprint</strong> locks the commitment and immediately opens...</p>
+          <div style="font-size: 2rem; font-weight: 900; background: var(--kanban-col-bg); padding: 18px 36px; border-radius: 8px; border: 2px solid var(--primary); color: var(--accent-green);">
+            The Active Board! ➔
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 13: The Active Kanban Board Architecture -->
+    <div class="slide" data-notes="Now show the active board! The tickets are currently sitting in To Do, ready to be pulled by team members. Explain the 4 columns: To Do -> In Progress -> Review -> Done.">
+      <span class="module-tag">Module 4: Active Board Architecture</span>
+      <h1>The Board: 4 Execution Columns</h1>
+      <p class="lead-text">Sprint 1 is live! All 3 committed tickets now sit in <code>To Do</code>, ready to move through our workflow:</p>
       
       <div class="kanban-board">
         <div class="kanban-col">
           <div class="kanban-col-header">
             <span>To Do</span>
-            <span>Backlog</span>
+            <span>Committed</span>
           </div>
           <div class="ticket">
             <div class="ticket-id">DBC-1 (Task)</div>
@@ -828,6 +951,11 @@
             <div class="ticket-id">DBC-2 (Story)</div>
             <div class="ticket-title">Veg Fried Rice Order</div>
             <span class="ticket-badge badge-points">3 pts</span>
+          </div>
+          <div class="ticket">
+            <div class="ticket-id">DBC-3 (Story)</div>
+            <div class="ticket-title">Double Paneer Manchurian</div>
+            <span class="ticket-badge badge-points">5 pts</span>
           </div>
         </div>
         <div class="kanban-col">
@@ -854,11 +982,11 @@
       </div>
     </div>
 
-    <!-- Slide 9: Sprint 1 Demo - Ticket 1 -->
+    <!-- Slide 14: Sprint 1 Demo - Ticket 1 Actions (Happy Path) -->
     <div class="slide" data-notes="Demonstrate DBC-1 live on Jira. Drag from To Do to In Progress. Write comment with mobile hotspot fix. Move to Review, PO verifies, move to Done.">
-      <span class="module-tag">Module 4: Sprint 1 Live Walkthrough</span>
+      <span class="module-tag">Module 4: Live Execution • Ticket 1</span>
       <h1>Ticket 1: The Happy Path (Task: Wi-Fi Outage)</h1>
-      <p class="lead-text">Watch the live Jira projector screen as we move our first operational incident through the board:</p>
+      <p class="lead-text">Watch the live Jira projector screen as we move our operational task across the columns:</p>
       <div class="grid-2">
         <div class="card" style="border-left: 6px solid var(--accent-green); padding: 36px;">
           <div class="ticket-id" style="font-size: 1.45rem;">DBC-1 (Task - 2 Story Points)</div>
@@ -870,20 +998,20 @@
           </div>
         </div>
         <div class="card" style="justify-content: center; padding: 36px;">
-          <h3 style="color: var(--primary); font-size: 2.1rem;">Live Jira Actions Executed:</h3>
+          <h3 style="color: var(--primary); font-size: 2.1rem;">Live Jira Board Actions:</h3>
           <ol style="line-height: 2.3; margin-top: 16px; font-size: 1.65rem;">
             <li>Drag DBC-1: <code>To Do</code> → <code>In Progress</code>.</li>
             <li>Assign ticket to Facilitator.</li>
-            <li>Enter practical 2-line fix in the Comments section.</li>
+            <li>Post practical fix in the Comments section.</li>
             <li>Move to <code>Review</code> → PO approves → Move to <code>Done</code>.</li>
           </ol>
         </div>
       </div>
     </div>
 
-    <!-- Slide 10: Sprint 1 Demo - Ticket 2 (Review Rejection) -->
+    <!-- Slide 15: Sprint 1 Demo - Ticket 2 Actions (Review Rejection) -->
     <div class="slide" data-notes="Demonstrate DBC-2. Dev submits without sauce packets. PO spots it in Review! Drag card BACKWARDS from Review to In Progress. Dev adds sauce, updates comment, moves to Review, then Done. Highlight: Review is a real gate! Incomplete work moves backwards!">
-      <span class="module-tag">Module 4: Sprint 1 Live Walkthrough</span>
+      <span class="module-tag">Module 4: Live Execution • Ticket 2</span>
       <h1>Ticket 2: The Review Rejection (Story Backwards Flow)</h1>
       <p class="lead-text">Review is a quality firewall, not a rubber stamp. Incomplete work gets rejected backwards:</p>
       <div class="grid-2">
@@ -910,9 +1038,9 @@
       </div>
     </div>
 
-    <!-- Slide 11: Sprint 1 Demo - Ticket 3 (The Blocker Flag) -->
+    <!-- Slide 16: Sprint 1 Demo - Ticket 3 Actions (The Blocker Flag) -->
     <div class="slide" data-notes="Demonstrate DBC-3. Paneer is out of stock. Right-click card in Jira -> Add Flag. Card turns yellow. Create linked Bug ticket for vendor restock. Pivot to other work.">
-      <span class="module-tag">Module 4: Sprint 1 Live Walkthrough</span>
+      <span class="module-tag">Module 4: Live Execution • Ticket 3</span>
       <h1>Ticket 3: Out-of-Stock Blocker Flag</h1>
       <p class="lead-text">When an external dependency halts work, flag it immediately rather than suffering in silence:</p>
       <div class="grid-2">
@@ -933,24 +1061,24 @@
       </div>
     </div>
 
-    <!-- Slide 12: Sprint 2 Team Rules -->
-    <div class="slide" data-notes="Hand over control to the 10 teams! Assign roles: 1 PO (Review gatekeeper), 1 Scrum Master (PointingPoker & timer), 4 Developers (Chefs). Start the 20-minute countdown!">
-      <span class="module-tag">Module 5: 10 Teams on the Floor</span>
+    <!-- Slide 17: Sprint 2 Team Rules (Dynamic Team Sizes) -->
+    <div class="slide" data-notes="Hand over control to the cohort teams! Assign roles: 1 PO (Review gatekeeper), 1 Scrum Master (PointingPoker & timer), Operations Developers (Chefs). Start the 20-minute countdown!">
+      <span class="module-tag">Module 5: Team Simulation</span>
       <h1>Sprint 2: Team Hands-On Simulation</h1>
-      <p class="lead-text">Now it's your turn. 10 teams of 6 engineers will manage their own DB Cafe sprint under strict capacity constraints:</p>
+      <p class="lead-text">Now it's your turn. Form your sprint teams and manage your own DB Cafe sprint under strict capacity constraints:</p>
       
       <div class="grid-3">
         <div class="card" style="padding: 34px;">
           <h3 style="color: var(--primary); font-size: 2rem;">👥 Assigned Team Roles</h3>
           <ul style="font-size: 1.55rem; line-height: 1.7;">
-            <li><strong>1 Product Owner:</strong> Guards capacity & approves the <code>Review</code> column.</li>
-            <li><strong>1 Scrum Master:</strong> Runs PointingPoker & tracks timer.</li>
-            <li><strong>4 Developers (Chefs):</strong> Drafts 2-line practical SOP fixes.</li>
+            <li><strong>Product Owner:</strong> Guards capacity & approves the <code>Review</code> column.</li>
+            <li><strong>Scrum Master:</strong> Runs PointingPoker & tracks timer.</li>
+            <li><strong>Operations Developers:</strong> Drafts 2-line practical SOP fixes.</li>
           </ul>
         </div>
         <div class="card" style="padding: 34px;">
           <h3 style="color: var(--accent-gold); font-size: 2rem;">🛡️ Capacity Constraint</h3>
-          <p style="margin-top: 10px; font-size: 1.6rem; line-height: 1.6;"><strong>Strict 10 Story Points Max!</strong> The backlog has 10 stories totaling 34 points. You must reject, defer, and prioritize ruthlessly.</p>
+          <p style="margin-top: 10px; font-size: 1.6rem; line-height: 1.6;"><strong>Strict 10 Story Points Max!</strong> The backlog has 10 candidate items totaling 34 points. You must reject, defer, and prioritize ruthlessly.</p>
         </div>
         <div class="card" style="justify-content: center; align-items: center; text-align: center; padding: 34px;">
           <h3 style="color: var(--accent-green); font-size: 2rem;">⏱️ Live Sprint Timer</h3>
@@ -967,8 +1095,8 @@
       </div>
     </div>
 
-    <!-- Slide 13: Sprint 2 Backlog Menu -->
-    <div class="slide" data-notes="Give teams 3 minutes to review the 10 candidate stories. Warn them again that some stories are traps! Look out for Biryani Festival (Feature) and Avocado Toast!">
+    <!-- Slide 18: Sprint 2 Backlog Menu -->
+    <div class="slide" data-notes="Give teams 3 minutes to review the 10 candidate items. Warn them again that some items are multi-sprint Features or dependency traps! Look out for Biryani Festival and Avocado Toast!">
       <span class="module-tag">Module 5: The Sprint 2 Backlog Menu</span>
       <h1>Select Your 10-Point Sprint Commitment</h1>
       <p class="lead-text">10 candidate items total 34 points. Choose wisely—some are high-value Stories, others are multi-sprint Features or traps!</p>
@@ -986,7 +1114,7 @@
       </div>
     </div>
 
-    <!-- Slide 14: Sprint 2 Injected Curveballs -->
+    <!-- Slide 19: Sprint 2 Injected Curveballs -->
     <div class="slide" data-notes="Inject these live! At Minute 8: Gas cylinder #2 failure. At Minute 14: Campus Director emergency high tea platter. Watch how teams react.">
       <span class="module-tag">Module 5: Live Production Alerts</span>
       <h1>🚨 In-Sprint Chaos Injections!</h1>
@@ -1006,7 +1134,7 @@
       </div>
     </div>
 
-    <!-- Slide 15: Show of Hands Debrief -->
+    <!-- Slide 20: Show of Hands Debrief -->
     <div class="slide" data-notes="Conduct the show of hands interrogation! 1) Who took Biryani fest? (Call them out on scope creep!). 2) Who took Avocado toast? (Call out zero stock!). Call up 2 teams and mirror their tickets live into Jira.">
       <span class="module-tag">Module 6: The Interrogation</span>
       <h1>Show of Hands: Who Took the Bait?</h1>
@@ -1037,7 +1165,7 @@
       </div>
     </div>
 
-    <!-- Slide 16: Retrospective & Burndown -->
+    <!-- Slide 21: Retrospective & Burndown -->
     <div class="slide" data-notes="Click Complete Sprint in Jira. Open the Burndown Chart. Explain the ideal guideline vs actual remaining work line. Show what flatlines (bottlenecks) and steep drops (batching) mean.">
       <span class="module-tag">Module 7: Inspect & Adapt</span>
       <h1>Reading the Jira Burndown Chart</h1>
@@ -1063,7 +1191,7 @@
       </div>
     </div>
 
-    <!-- Slide 17: Career Roles & AI Era -->
+    <!-- Slide 22: Career Roles & AI Era -->
     <div class="slide" data-notes="Explain why Agile matters MORE now that AI coding assistants exist. Code is becoming cheap. Requirements, backlog prioritization, and review governance are becoming priceless.">
       <span class="module-tag">Module 8: Industry Relevance</span>
       <h1>Agile in the AI Era: Why It Matters MORE</h1>
@@ -1086,7 +1214,7 @@
       </div>
     </div>
 
-    <!-- Slide 18: Capstone Mapping -->
+    <!-- Slide 23: Capstone Mapping -->
     <div class="slide" data-notes="Connect DB Cafe back to their final-year engineering capstone projects. Show the direct mapping table.">
       <span class="module-tag">Module 8: Engineering Capstone Alignment</span>
       <h1>From DB Cafe to Final-Year Engineering</h1>
@@ -1127,8 +1255,8 @@
       </div>
     </div>
 
-    <!-- Slide 19: Wrap-Up & Next Steps -->
-    <div class="slide" data-notes="Thank the students! Give them their next steps: Sign up for free Jira Cloud, use the student reference guide, and put Jira on their resumes!">
+    <!-- Slide 24: Wrap-Up & Menti Q&A Floor (Free signup removed; Menti added) -->
+    <div class="slide" data-notes="Thank the students! Point them to Menti for submitting questions and feedback. Open the floor for live discussion.">
       <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
         <span class="module-tag" style="color: var(--accent-green); font-size: 1.5rem;">SIMULATION COMPLETE</span>
         <h1 style="font-size: 4rem; margin-bottom: 22px;">You Survived the Rush Hour!</h1>
@@ -1136,15 +1264,20 @@
           You prioritized under pressure, defended capacity against scope creep, enforced quality in Review, and mastered visual project governance.
         </p>
         
-        <div class="card" style="text-align: left; max-width: 1250px; margin: 0 auto 40px auto; width: 100%; padding: 34px;">
+        <div class="card" style="text-align: left; max-width: 1200px; margin: 0 auto 40px auto; width: 100%; padding: 34px;">
           <h3 style="color: var(--primary); font-size: 1.85rem;">🚀 Your Immediate Next Steps:</h3>
           <ul style="line-height: 2.1; margin-top: 16px; font-size: 1.55rem;">
-            <li>Sign up for your own Free Jira Cloud account: <strong style="color: var(--text-main);">atlassian.com/software/jira</strong> (Free for up to 10 users).</li>
             <li>Configure a Scrum board with <code>Review</code> column for your semester projects.</li>
+            <li>Use <strong>Acceptance Criteria</strong> on every ticket to prevent rework and misunderstandings.</li>
             <li>Highlight <em>"Agile, Scrum & Jira Sprint Governance"</em> on your engineering portfolio.</li>
           </ul>
         </div>
-        <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-gold);">Questions & Answers Floor Open 💬</div>
+        <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-gold);">
+          💬 Submit Your Questions on Menti / Open Floor
+        </div>
+        <p style="font-size: 1.4rem; color: var(--text-muted); margin-top: 8px;">
+          Enter the code on your screen or raise your hand!
+        </p>
       </div>
     </div>
 
